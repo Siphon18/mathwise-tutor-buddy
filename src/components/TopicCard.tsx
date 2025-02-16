@@ -20,7 +20,7 @@ export const TopicCard = ({
     <div
       onClick={onClick}
       className={cn(
-        "p-6 rounded-xl transition-all duration-300 cursor-pointer animate-float",
+        "p-6 rounded-xl transition-all duration-300 cursor-pointer",
         "backdrop-blur-sm border hover:shadow-lg",
         selected
           ? "bg-primary/10 border-primary"

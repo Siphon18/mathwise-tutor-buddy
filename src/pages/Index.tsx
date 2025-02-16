@@ -15,7 +15,7 @@ import {
 const Index = () => {
   const [messages, setMessages] = useState<{ text: string; isAi: boolean }[]>([
     {
-      text: "Hello! I'm your AI math tutor. What would you like to learn today?",
+      text: "Hello! I'm your AI math tutor. Please select a topic you'd like to learn about.",
       isAi: true,
     },
   ]);
@@ -27,21 +27,25 @@ const Index = () => {
       title: "Algebra",
       description: "Master equations and variables",
       icon: <Binary className="w-6 h-6" />,
+      prompt: "You are an expert algebra tutor. Focus on explaining algebraic concepts, equations, variables, and problem-solving techniques. Break down complex algebraic problems into simple steps. Current question: ",
     },
     {
       title: "Geometry",
       description: "Explore shapes and spaces",
       icon: <PiSquare className="w-6 h-6" />,
+      prompt: "You are an expert geometry tutor. Focus on shapes, spatial relationships, angles, and geometric proofs. Use visual explanations and step-by-step geometric problem solving. Current question: ",
     },
     {
       title: "Calculus",
       description: "Learn about rates of change",
       icon: <Sigma className="w-6 h-6" />,
+      prompt: "You are an expert calculus tutor. Focus on derivatives, integrals, limits, and rates of change. Explain calculus concepts with practical examples and clear steps. Current question: ",
     },
     {
       title: "Basic Math",
       description: "Strengthen your foundations",
       icon: <Calculator className="w-6 h-6" />,
+      prompt: "You are an expert in basic mathematics. Focus on arithmetic, fractions, decimals, and percentages. Provide clear, simple explanations with practical examples. Current question: ",
     },
   ];
 
@@ -49,14 +53,31 @@ const Index = () => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
 
+    const selectedTopicData = topics.find(topic => topic.title === selectedTopic);
+    let aiResponse = "Please select a topic first to get a more focused response.";
+
+    if (selectedTopicData) {
+      aiResponse = "Let me help you with your " + selectedTopicData.title.toLowerCase() + " question. I'll explain this step by step...";
+    }
+
     const newMessages = [
       ...messages,
       { text: inputMessage, isAi: false },
-      { text: "Let me help you with that! Here's a step-by-step explanation...", isAi: true },
+      { text: aiResponse, isAi: true },
     ];
     
     setMessages(newMessages);
     setInputMessage("");
+  };
+
+  const handleTopicSelect = (topicTitle: string) => {
+    setSelectedTopic(topicTitle);
+    setMessages([
+      {
+        text: `Great choice! I'm ready to help you with ${topicTitle}. What would you like to know?`,
+        isAi: true,
+      },
+    ]);
   };
 
   return (
@@ -75,7 +96,7 @@ const Index = () => {
               <TopicCard
                 {...topic}
                 selected={selectedTopic === topic.title}
-                onClick={() => setSelectedTopic(topic.title)}
+                onClick={() => handleTopicSelect(topic.title)}
               />
             </div>
           ))}
@@ -97,10 +118,11 @@ const Index = () => {
             <Input
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Ask your math question..."
+              placeholder={selectedTopic ? `Ask your ${selectedTopic.toLowerCase()} question...` : "Please select a topic first..."}
               className="flex-1"
+              disabled={!selectedTopic}
             />
-            <Button type="submit" className="bg-primary hover:bg-primary/90">
+            <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={!selectedTopic}>
               <Send className="w-4 h-4" />
             </Button>
           </form>

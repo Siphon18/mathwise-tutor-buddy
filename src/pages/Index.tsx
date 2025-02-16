@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Calculator,
-  Function,
+  Binary,
   PiSquare,
   Sigma,
   Send,
@@ -26,7 +26,7 @@ const Index = () => {
     {
       title: "Algebra",
       description: "Master equations and variables",
-      icon: <Function className="w-6 h-6" />,
+      icon: <Binary className="w-6 h-6" />,
     },
     {
       title: "Geometry",
